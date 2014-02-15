@@ -7,8 +7,6 @@ import (
 // An smap is a sorted map of strings.
 type smap []string
 
-func newSmap() smap { return nil }
-
 func (m *smap) Add(s string) {
 	i, ok := m.find(s)
 	if !ok {

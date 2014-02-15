@@ -41,8 +41,9 @@ func Sync(root, gopath string) error {
 	}
 
 	// Now sync each dependency, adding transitive deps to the to-process list as we go.
-	processedDeps := newSmap()
-	toProcessDeps := immediateDeps // Multiple packages may map to the same repo, and thus must necessarily must be at the same rev. We will
+	var processedDeps smap
+	toProcessDeps := immediateDeps
+	// Multiple packages may map to the same repo, and thus must necessarily must be at the same rev. We will
 	// fill in the following two mappings as we go and fail if there's a contradiction.
 	pinnedVersionsByRepo := make(map[string]string)
 	packageToRepo := make(map[string]string)
@@ -124,7 +125,7 @@ func Sync(root, gopath string) error {
 	// pinnedVersions may contain outdated deps that are not needed by the current project code.
 	pinlistFilename := filepath.Join(root, projectDirName, pinlistName)
 	newPinlist := new(Pinlist)
-	deps := newSmap()
+	var deps smap
 	for dep := range packageToRepo {
 		deps.Add(dep)
 	}
@@ -171,8 +172,6 @@ func findPossiblePackageDirs(srcDir string) []string {
 }
 
 func findProjectDeps(context *build.Context, root string) (immediateDeps, projectPackages smap, err error) {
-	immediateDeps = newSmap()
-	projectPackages = newSmap()
 	srcDir := filepath.Join(root, "src")
 	for _, dir := range findPossiblePackageDirs(srcDir) {
 		pkg, err := context.ImportDir(dir, 0)
@@ -216,7 +215,6 @@ func findDeps(context *build.Context, dir string) (immediateDeps smap, err error
 }
 
 func findNonStdDeps(context *build.Context, pkg *build.Package) (immediateDeps smap) {
-	immediateDeps = newSmap()
 	imports := pkg.Imports
 	imports = append(imports, pkg.TestImports...)
 	imports = append(imports, pkg.XTestImports...)
