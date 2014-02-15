@@ -60,7 +60,26 @@ func (v VCSCmd) GetRev(dir string) (rev string, dirty bool, err error) {
 }
 
 func (v VCSCmd) UpdateRev(dir, rev string) error {
+	updateNeeded := false
+	switch v.Cmd.Cmd {
+	case "git":
+		out, err := v.runSilent(dir, "cat-file -t "+rev)
+		updateNeeded = (err != nil || string(bytes.TrimSpace(out)) != "commit")
+	case "hg":
+		panic("unimplemented")
+	}
 	var cmd string
+	if updateNeeded {
+		switch v.Cmd.Cmd {
+		case "git":
+			cmd = "fetch"
+		case "hg":
+			panic("unimplemented")
+		}
+		if err := v.run(dir, cmd); err != nil {
+			return err
+		}
+	}
 	switch v.Cmd.Cmd {
 	case "git":
 		// TODO: is it better to reset --hard instead of leaving a detached head?
@@ -76,14 +95,19 @@ func (v VCSCmd) UpdateRev(dir, rev string) error {
 
 // run runs the command line cmd in the given directory. If an error occurs, run prints the command line and
 // the command's combined stdout+stderr to standard error. Otherwise run discards the command's output.
-func (v VCSCmd) run(dir string, cmd string) error {
+func (v VCSCmd) run(dir, cmd string) error {
 	_, err := v.run1(dir, cmd, true)
 	return err
 }
 
 // runOutput is like run but returns the output of the command.
-func (v VCSCmd) runOutput(dir string, cmd string) ([]byte, error) {
+func (v VCSCmd) runOutput(dir, cmd string) ([]byte, error) {
 	return v.run1(dir, cmd, true)
+}
+
+// runSilent is like runOutput but does not print anything on failure.
+func (v VCSCmd) runSilent(dir, cmd string) ([]byte, error) {
+	return v.run1(dir, cmd, false)
 }
 
 // run1 is the generalized implementation of run and runOutput.

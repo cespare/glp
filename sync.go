@@ -125,13 +125,13 @@ func Sync(root, gopath string) error {
 	pinlistFilename := filepath.Join(root, projectDirName, pinlistName)
 	newPinlist := new(Pinlist)
 	deps := newSmap()
-	for _, dep := range packageToRepo {
+	for dep := range packageToRepo {
 		deps.Add(dep)
 	}
 	for _, dep := range deps {
 		newPinlist.Deps = append(newPinlist.Deps, Dep{
 			Name: dep,
-			Rev:  pinnedVersionsByRepo[dep],
+			Rev:  pinnedVersionsByRepo[packageToRepo[dep]],
 		})
 	}
 	return newPinlist.Save(pinlistFilename)

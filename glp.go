@@ -89,6 +89,9 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
+	if err := os.Chdir(root); err != nil {
+		fatal(err)
+	}
 
 	gopath := makeGOPATH(root)
 

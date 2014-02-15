@@ -2,13 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"sort"
 )
 
 // A Pinlist represents a pinned list of dependencies.
 type Pinlist struct {
-	Deps     []Dep `json:"deps"`
+	Deps []Dep `json:"deps"`
 }
 
 // A Dep is a third-party package dependency.
@@ -19,18 +20,28 @@ type Dep struct {
 	Rev string `json:"rev"`
 }
 
-func LoadPinlist(filename string) (*Pinlist, error) {
+func LoadPinlist(filename string) (p *Pinlist, err error) {
+	defer func() {
+		if err != nil {
+			if _, ok := err.(*os.PathError); !ok {
+				err = errors.New("Error loading pinlist: " + err.Error())
+			}
+		}
+	}()
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 	decoder := json.NewDecoder(f)
-	var p Pinlist
-	if err := decoder.Decode(&p); err != nil {
+	p = new(Pinlist)
+	if err := decoder.Decode(p); err != nil {
 		return nil, err
 	}
-	return &p, nil
+	if err := p.validate(); err != nil {
+		return nil, err
+	}
+	return p, nil
 }
 
 func (p *Pinlist) Save(filename string) error {
@@ -56,4 +67,20 @@ func (d deps) Swap(i, j int)      { d[i], d[j] = d[j], d[i] }
 
 func (p *Pinlist) normalize() {
 	sort.Sort(deps(p.Deps))
+}
+
+type validationErr struct {
+	error
+}
+
+func (p *Pinlist) validate() error {
+	for _, dep := range p.Deps {
+		if dep.Name == "" {
+			return validationErr{errors.New("bad dep name (empty string)")}
+		}
+		if dep.Rev == "" {
+			return validationErr{errors.New("bad rev (empty string)")}
+		}
+	}
+	return nil
 }

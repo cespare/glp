@@ -1,12 +1,3 @@
 {
-	"deps": [
-		{
-			"name": "github.com/cespare/argf",
-			"rev": "1217bff8cf106f3a7029525b2fc7620fe52161f9"
-		},
-		{
-			"name": "github.com/cespare/hutil",
-			"rev": "308dc4988242523f80e4aa52845d56dcf26866ce"
-		}
-	]
+	"deps": []
 }
