@@ -1,11 +1,3 @@
-## To do
-
-* In `Verify()`, remove any repos not needed by deps in the pinlist. Otherwise we're not really providing an
-  environment isolated to the packages listed there.
-  - Does this mean revisiting the behavior of using whatever rev is in an already-cached repo in `Sync()`?
-  - In any case, `Sync()` should be printing out what revs it's using for new repos.
-* Hijack `-h`, `help`, etc to provide useful information about glp.
-
 ## Things to test
 
 * Do tests for each VCS

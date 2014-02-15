@@ -9,18 +9,6 @@ Before using glp, it is recommended that you have a good grasp of the usual, glo
 organizing Go code and libraries, and that you have a working Go installation that follows this model. Read
 [How to Write Go Code](http://golang.org/doc/code.html) for a good introduction.
 
-Here are some of the goals behind glp:
-
-* Pin dependencies to particular revisions without having to check the code into the repository or use
-  submodules.
-* Build code in an isolated environment that cannot accidentally pull in dependencies from the global $GOPATH.
-* Provide tooling for discovering and downloading/pinning new dependencies.
-* No switching cost when working on a project (such as sourcing setup shell scripts).
-* Keep application code anywhere (not in a predefined hierarchy determined by a global `$GOPATH`).
-* Support all the version control tools that the Go tool supports (except svn).
-* Allow for keeping root both in the project root or split into packages in the `src` directory.
-* For projects with multiple packages, import the package like `"foo"`, not `"github.com/org/proj/foo"`.
-
 **Note:** glp is still a work in progress and may change at any time.
 
 ### Installation
@@ -61,6 +49,21 @@ explanation of glp's behavior.
 
 * You should configure your VCS to ignore the `glp/_cache` directory (but leave `glp/` and any other files
   inside it alone). If you're using git, you could put `/glp/_cache` in the `.gitignore` in your project root.
+
+### Motivation
+
+Here are some of the goals behind glp:
+
+* Pin dependencies to particular revisions without having to check the code into the repository or use
+  submodules.
+* Build code in an isolated environment that cannot accidentally pull in dependencies from the global
+  `$GOPATH`.
+* Provide tooling for discovering and downloading/pinning new dependencies.
+* No switching cost when working on a project (such as sourcing setup shell scripts).
+* Keep application code anywhere (not in a predefined hierarchy determined by a global `$GOPATH`).
+* Support all the version control tools that the Go tool supports (except svn).
+* Allow for keeping root both in the project root or split into packages in the `src` directory.
+* For projects with multiple packages, import the package like `"foo"`, not `"github.com/org/proj/foo"`.
 
 ### Similar projects
 
