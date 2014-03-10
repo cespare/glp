@@ -3,7 +3,6 @@
 * Do tests for each VCS
   - ~~git~~
   - hg
-  - bzr
 * Test when the cache dir isn't there
 * When the cache dir is too recent
 * When the cache dir is too old

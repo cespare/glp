@@ -27,7 +27,8 @@ func Sync(root, gopath string) error {
 	}
 
 	// Get the list of immediate dependencies from the code
-	context := &build.Default
+	context := new(build.Context)
+	*context = build.Default
 	context.GOPATH = gopath
 
 	immediateDeps, projectPackages, err := findProjectDeps(context, root)
@@ -155,25 +156,11 @@ func makePinMap(root string) (map[string]string, error) {
 	return pinnedVersions, nil
 }
 
-// findPossiblePackages finds all the directories possibly containing Go packages in this directory: the root
-// itself (.) and all directories under the src directory.
-func findPossiblePackageDirs(srcDir string) []string {
-	results := []string{"."}
-	filepath.Walk(srcDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if info.IsDir() {
-			results = append(results, path)
-		}
-		return nil
-	})
-	return results
-}
-
 func findProjectDeps(context *build.Context, root string) (immediateDeps, projectPackages smap, err error) {
 	srcDir := filepath.Join(root, "src")
-	for _, dir := range findPossiblePackageDirs(srcDir) {
+	possiblePackageDirs := FindDirsRecursively(srcDir)
+	possiblePackageDirs = append(possiblePackageDirs, ".")
+	for _, dir := range possiblePackageDirs {
 		pkg, err := context.ImportDir(dir, 0)
 		if err != nil {
 			if _, ok := err.(*build.NoGoError); ok {

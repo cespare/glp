@@ -1,3 +1,12 @@
 {
-	"deps": []
+	"deps": [
+		{
+			"name": "github.com/cespare/argf",
+			"rev": "1217bff8cf106f3a7029525b2fc7620fe52161f8"
+		},
+		{
+			"name": "github.com/cespare/hutil/apachelog",
+			"rev": "0f270ecfd1502d9ffb71d768631ece25ecd7556c"
+		}
+	]
 }
