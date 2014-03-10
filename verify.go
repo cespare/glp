@@ -69,6 +69,10 @@ func verify(root string, dep Dep) error {
 		return err
 	}
 	dir := filepath.Join(root, projectDirName, cacheDirName, "src", repo.Root)
+	// Check if the directory exists first just to provide a friendlier warning.
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		return fmt.Errorf("Repo %s (for dependency %s) not cached. Run 'glp sync'.", repo.Repo, dep.Name)
+	}
 	rev, dirty, err := repo.VCS.GetRev(dir)
 	if err != nil {
 		return err
