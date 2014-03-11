@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"foobar"
 
 	"github.com/cespare/argf"
@@ -12,13 +9,6 @@ import (
 
 func main() {
 	_ = apachelog.ApacheTimeFormat
+	_ = argf.Scan
 	foobar.Say()
-
-	for argf.Scan() {
-		fmt.Println(argf.String())
-	}
-	if err := argf.Error(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 }
