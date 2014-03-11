@@ -26,8 +26,6 @@ func init() {
 	}
 }
 
-var noProjectDirExists = errors.New("no glp project directory exists")
-
 // findProjectRoot locates a glp project root by looking for a 'glp' directory.
 func findProjectRoot() (string, error) {
 	dir, err := os.Getwd()
@@ -41,7 +39,7 @@ func findProjectRoot() (string, error) {
 		}
 		parent := filepath.Dir(dir)
 		if parent == dir {
-			return "", noProjectDirExists
+			return "", errors.New("no glp project directory found")
 		}
 		dir = parent
 	}
@@ -79,11 +77,7 @@ func main() {
 
 	root, err := findProjectRoot()
 	if err != nil {
-		if err == noProjectDirExists {
-			// Nothing to do -- just pass through to go transparently
-			fatal(execGoTool(args, os.Environ()))
-		}
-		fatal(err)
+		fatalf("Error locating glp project: %s", err)
 	}
 	root, err = filepath.Abs(root)
 	if err != nil {
@@ -97,14 +91,16 @@ func main() {
 
 	if len(args) > 0 {
 		command := args[0]
-		if command == "sync" {
+		switch command {
+		case "sync":
 			if err := Sync(root, gopath); err != nil {
 				fatal(err)
 			}
 			return
-		}
-		if disabledGoCommands[command] {
-			fatalf("Error: the command 'go %s' cannot be used in a glp project.\n", command)
+		default:
+			if disabledGoCommands[command] {
+				fatalf("Error: the command 'go %s' cannot be used in a glp project.\n", command)
+			}
 		}
 	}
 
