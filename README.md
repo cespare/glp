@@ -61,7 +61,8 @@ The cache is modified to reflect the pinned versions and the pinlist is updated 
 
 ### path
 
-TODO
+`glp path` prints out the `$GOPATH` that glp uses when it invokes the Go tool. This can be useful, for example,
+if you're modifying some other tool which calls `go` to work with glp.
 
 ### help
 

@@ -97,6 +97,9 @@ func main() {
 				fatal(err)
 			}
 			return
+		case "path":
+			fmt.Println(gopath)
+			return
 		default:
 			if disabledGoCommands[command] {
 				fatalf("Error: the command 'go %s' cannot be used in a glp project.\n", command)
