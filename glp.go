@@ -92,13 +92,16 @@ func main() {
 	if len(args) > 0 {
 		command := args[0]
 		switch command {
+		case "help", "-h", "--help":
+			fmt.Printf(glpHelp, os.Args[0])
+			return
+		case "path":
+			fmt.Println(gopath)
+			return
 		case "sync":
 			if err := Sync(root, gopath); err != nil {
 				fatal(err)
 			}
-			return
-		case "path":
-			fmt.Println(gopath)
 			return
 		default:
 			if disabledGoCommands[command] {

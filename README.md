@@ -66,7 +66,7 @@ if you're modifying some other tool which calls `go` to work with glp.
 
 ### help
 
-TODO
+`glp help` prints out a help message with some basic usage instructions.
 
 ### Updating dependencies
 
