@@ -59,7 +59,7 @@ func Sync(root, gopath string) error {
 		switch repo.VCS.Cmd.Cmd {
 		case "git", "hg":
 		default:
-			return fmt.Errorf("%s is not VCS supported by glp", repo.VCS.Cmd.Name)
+			return fmt.Errorf("%s is not a VCS supported by glp", repo.VCS.Cmd.Name)
 		}
 		packageToRepo[importPath] = repo.Root
 		rev, pinned := pinnedVersions[importPath]

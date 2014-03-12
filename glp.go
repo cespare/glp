@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"syscall"
 )
@@ -16,7 +17,10 @@ const (
 	pinlistName    = "deps.json"
 )
 
-var goBinary = ""
+var (
+	goBinary  = ""
+	debugMode = os.Getenv("GLP_DEBUG") != ""
+)
 
 func init() {
 	var err error
@@ -137,10 +141,22 @@ func main() {
 
 func fatal(args ...interface{}) {
 	fmt.Println(args...)
+	if debugMode {
+		printStack()
+	}
 	os.Exit(1)
 }
 
 func fatalf(format string, args ...interface{}) {
 	fmt.Printf(format, args...)
+	if debugMode {
+		printStack()
+	}
 	os.Exit(1)
+}
+
+func printStack() {
+	buf := make([]byte, 1e5)
+	n := runtime.Stack(buf, true)
+	os.Stderr.Write(buf[:n])
 }
