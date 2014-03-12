@@ -108,7 +108,8 @@ func Sync(root, gopath string) error {
 		pinnedVersionsByRepo[repo.Root] = rev
 
 		// Add the dependencies of this package to the to-process list if they haven't already been inspected
-		deps, err := findDeps(context, repoDir)
+		packageDir := filepath.Join(cacheDir, importPath)
+		deps, err := findDeps(context, packageDir)
 		if err != nil {
 			return err
 		}
