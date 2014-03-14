@@ -183,11 +183,16 @@ func findProjectDeps(context *build.Context, root string) (immediateDeps, projec
 		}
 	}
 
-	// Remove the intra-project deps from immediateDeps
+	// Remove the intra-project deps from immediateDeps. We need two steps because it's not valid to remove
+	// items from an smap while traversing it.
+	var toRemove []string
 	for _, dep := range immediateDeps {
 		if projectPackages.Contains(dep) {
-			immediateDeps.Remove(dep)
+			toRemove = append(toRemove, dep)
 		}
+	}
+	for _, dep := range toRemove {
+		immediateDeps.Remove(dep)
 	}
 
 	return immediateDeps, projectPackages, nil
