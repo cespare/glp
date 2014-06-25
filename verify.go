@@ -5,6 +5,7 @@ import (
 	"go/build"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type mismatchedDepsError struct {
@@ -23,6 +24,13 @@ func Verify(root string, pinlist *Pinlist) error {
 		_, err := context.ImportDir(path, 0)
 		if err != nil {
 			if _, ok := err.(*build.NoGoError); ok {
+				continue
+			}
+			// NOTE: this is a special case for the import error that results from having more than one Go package
+			// in the directory at this path. Unfortunately, go/build does not provide a nice error to check against
+			// here, so I'm doing string matching for now. See issue 8288:
+			// https://code.google.com/p/go/issues/detail?id=8286
+			if strings.HasPrefix(err.Error(), "found packages ") {
 				continue
 			}
 			return err
