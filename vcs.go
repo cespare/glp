@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"code.google.com/p/go.tools/go/vcs"
+	"golang.org/x/tools/go/vcs"
 )
 
 // This file adds some extra utility functions onto the functionality provided by go.tools/go/vcs.
