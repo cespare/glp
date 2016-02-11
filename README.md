@@ -1,3 +1,9 @@
+# Deprecation notice
+
+This project is no longer maintained. See the vendoring support in Go 1.5+ (GO15VENDOREXPERIMENT) and the tools that are made to work with that specifically.
+
+---
+
 # glp
 
 glp is a tool for managing [Go](http://golang.org/) code and dependencies in a project-oriented fashion. It is
